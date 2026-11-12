@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MKP Meet</title>
+<base target="_top">
+<!-- Only people with the link should find this page -->
+<meta name="robots" content="noindex">
+<!-- Tab icon, iPhone home-screen icon, and the card shown when the link is texted or posted -->
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-title" content="MKP Meet">
+<meta name="description" content="Find the days or times that work for everyone.">
+<meta property="og:title" content="MKP Meet">
+<meta property="og:description" content="Tap the days or times that work for you. We'll find the one that works for everyone.">
+<meta property="og:image" content="https://mkpgca.github.io/meet/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://mkpgca.github.io/meet/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  /* MKP colors: blue #2B5A9E, gold #FBCA29, gray #86888A, maroon #7B111D, light gold #E7C468 */
+  :root { --ink:#1b2333; --quiet:#5f6368; --line:#e3e6ea; --bg:#ffffff; --soft:#f4f6f9;
+          --blue:#2B5A9E; --gold:#FBCA29; --gray:#86888A; --maroon:#7B111D;
+          --c:#2B5A9E; --heat:#2B5A9E;
+          --head:Rockwell, "Rockwell Nova", "Roboto Slab", "DejaVu Serif", Georgia, serif;
+          --body:Univers, "Univers LT Std", "Univers Next", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; font-family:var(--body); color:var(--ink); background:var(--soft); font-size:16px; line-height:1.4; }
+  button, input, select, textarea { font:inherit; color:inherit; }
+  h1, h2, .head { font-family:var(--head); }
+  .brand { background:#fff; padding:12px 16px 8px; text-align:center; }
+  .brand img { width:100%; max-width:280px; height:auto; display:inline-block; }
+  .band { background:var(--c); color:#fff; padding:14px 16px 14px; border-bottom:5px solid var(--gold); }
+  .band .kicker { font-size:12px; letter-spacing:.08em; text-transform:uppercase; opacity:.9; }
+  .band h1 { font-weight:700; font-size:26px; margin:2px 0 0; line-height:1.15; }
+  .band .sub { font-size:14px; opacity:.92; margin-top:4px; }
+  main { max-width:640px; margin:0 auto; padding:12px 12px 120px; }
+  .card { background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px; }
+  .card h2 { font-size:17px; margin:0 0 10px; }
+  label.f { display:block; font-size:14px; font-weight:600; margin:12px 0 4px; }
+  label.f:first-child { margin-top:0; }
+  .hint { font-size:13px; color:var(--quiet); }
+  input[type=text], input[type=email], input[type=date], select, textarea {
+    width:100%; max-width:100%; font-size:16px; padding:10px 12px; border:1px solid #c9ced6; border-radius:10px; background:#fff; min-height:44px; }
+  textarea { min-height:70px; resize:vertical; }
+  .two { display:flex; gap:10px; } .two > div { flex:1; min-width:0; }
+  .btn { border:0; border-radius:12px; padding:12px 16px; font-size:16px; font-weight:600; min-height:44px;
+         background:var(--c); color:#fff; cursor:pointer; }
+  .btn.wide { width:100%; }
+  .btn.ghost { background:#fff; color:var(--ink); border:1px solid #c9ced6; font-weight:500; }
+  .btn.small { padding:8px 12px; font-size:14px; border-radius:10px; }
+  .btn.confirm { background:#b3261e; color:#fff; border-color:#b3261e; }
+  .btn:disabled { opacity:.55; }
+  .tap { display:inline-block; padding:10px 2px; }
+  .seg { display:flex; background:var(--soft); border-radius:12px; padding:3px; gap:3px; }
+  .seg button { flex:1; border:0; background:none; padding:9px 6px; border-radius:10px; font-size:15px; cursor:pointer; min-height:44px; }
+  .seg button[aria-pressed=true] { background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.12); font-weight:600; }
+  /* month calendar */
+  .cal-head { display:flex; justify-content:space-between; align-items:center; margin:8px 0 6px; font-weight:600; }
+  .cal-head button { border:1px solid var(--line); background:#fff; border-radius:10px; width:44px; height:44px; font-size:18px; cursor:pointer; }
+  .cal { display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; text-align:center; }
+  .cal .dow { font-size:12px; color:var(--quiet); padding:4px 0; }
+  .cal button { aspect-ratio:1; min-height:44px; border:1px solid var(--line); background:#fff; border-radius:10px; font-size:15px; cursor:pointer; padding:0; }
+  .cal button.on { background:var(--c); color:#fff; border-color:var(--c); font-weight:700; }
+  .cal button.span { background:#eef0f3; border-color:#c9ced6; background:color-mix(in srgb, var(--c) 14%, white); border-color:color-mix(in srgb, var(--c) 30%, white); }
+  .cal button:disabled { opacity:.3; cursor:default; }
+  .opts li { list-style:none; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; border-top:1px solid var(--line); }
+  .opts ul { margin:8px 0 0; padding:0; } .opts li:first-child { border-top:0; }
+  /* day tabs */
+  .days { display:flex; gap:6px; overflow-x:auto; padding:2px 0 8px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .days::-webkit-scrollbar { display:none; }
+  .day { flex:none; min-width:62px; min-height:50px; border:1px solid var(--line); background:#fff; border-radius:12px; padding:6px 8px;
+         text-align:center; cursor:pointer; position:relative; }
+  .day b { display:block; font-size:13px; } .day span { font-size:13px; color:var(--quiet); }
+  .day[aria-pressed=true] { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .day[aria-pressed=true] span { color:#d6dae0; }
+  .day .pip { position:absolute; top:5px; right:6px; width:7px; height:7px; border-radius:50%; background:var(--heat); }
+  .tabs { position:sticky; top:0; z-index:3; background:var(--soft); padding:8px 0; }
+  .tools { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  /* time rows and option rows */
+  .rows { border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; user-select:none; }
+  .row { display:flex; align-items:center; width:100%; min-height:44px; border:0; border-top:1px solid var(--line);
+         background:#fff; padding:0 12px; text-align:left; cursor:pointer; gap:10px; }
+  .row:first-child { border-top:0; }
+  .row.hour { border-top-color:#c9ced6; }
+  .row .t { width:96px; flex:none; font-size:14px; color:var(--quiet); font-variant-numeric:tabular-nums; }
+  .row .v { flex:1; font-size:14px; }
+  .row.on { background:var(--heat); color:#fff; }
+  .row.on .t { color:rgba(255,255,255,.85); }
+  .row.opt { min-height:64px; padding:10px 14px; }
+  .row.opt .t { width:auto; flex:1; font-size:16px; color:var(--ink); font-weight:600; }
+  .row.opt.on .t { color:#fff; }
+  .row.opt .v { flex:none; text-align:right; }
+  .row .bar { flex:1; height:26px; border-radius:7px; background:var(--soft); position:relative; overflow:hidden; }
+  .row .bar i { position:absolute; inset:0 auto 0 0; background:var(--heat); border-radius:7px; }
+  .row .n { width:48px; flex:none; text-align:right; font-size:14px; font-variant-numeric:tabular-nums; }
+  .row.sel { outline:2px solid var(--ink); outline-offset:-2px; }
+  .who { padding:10px 12px 12px; background:var(--soft); font-size:14px; border-top:1px solid var(--line); }
+  .who .no { color:var(--quiet); margin-top:4px; }
+  /* overview heatmap */
+  .heat { display:grid; gap:2px; }
+  .heat .h { font-size:10px; color:var(--quiet); text-align:center; white-space:nowrap; overflow:hidden; }
+  .heat .tl { font-size:10px; color:var(--quiet); text-align:right; padding-right:4px; line-height:9px; white-space:nowrap; }
+  .heat button { height:9px; border:0; padding:0; border-radius:2px; background:var(--soft); cursor:pointer; }
+  .legend { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--quiet); margin-top:8px; flex-wrap:wrap; }
+  .legend i { width:16px; height:10px; border-radius:2px; display:inline-block; }
+  .best li { list-style:none; border-top:1px solid var(--line); padding:10px 0; display:flex; gap:10px; align-items:center; }
+  .best li:first-child { border-top:0; padding-top:2px; }
+  .best ul { margin:0; padding:0; }
+  .best .when { font-weight:600; } .best .meta { font-size:13px; color:var(--quiet); }
+  .best .grow { flex:1; min-width:0; }
+  .pill { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--gold); color:var(--ink); }
+  .final { background:var(--ink); color:#fff; border:0; border-left:6px solid var(--gold); }
+  .final a { color:#fff; }
+  .note { background:#fff8e1; border-color:#f3dd93; font-size:14px; }
+  .link { display:flex; gap:8px; align-items:center; }
+  .link code { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px;
+               background:var(--soft); padding:10px; border-radius:8px; }
+  .people li { list-style:none; display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid var(--line); gap:8px; }
+  .people ul { margin:0; padding:0; }
+  .people li:first-child { border-top:0; }
+  .bar-foot { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line);
+              padding:10px 12px calc(10px + env(safe-area-inset-bottom)); z-index:5; display:none; }
+  .bar-foot .in { max-width:640px; margin:0 auto; display:flex; gap:10px; align-items:center; }
+  .bar-foot .msg { flex:1; font-size:14px; color:var(--quiet); }
+  .err { color:#b3261e; font-size:14px; margin-top:8px; }
+  .center { text-align:center; padding:40px 16px; color:var(--quiet); }
+  .zone select { width:auto; display:inline-block; padding:6px 10px; margin-left:4px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><img src="logo.png" alt="The ManKind Project" width="280" height="48"></div>
+  <div class="band" id="band">
+    <div class="kicker">MKP Meet · Greater Carolinas</div>
+    <h1 id="title">Find a time together</h1>
+    <div class="sub" id="sub"></div>
+  </div>
+</header>
+<main id="app"><div class="center">Loading…</div></main>
+<div class="bar-foot" id="foot"><div class="in"><div class="msg" id="footMsg"></div>
+  <button class="btn" id="saveBtn" type="button">Save</button></div></div>
+
+<script>
+// ▼▼▼ Paste the Apps Script web app address here (Deploy → Manage deployments → the URL ending in /exec)
+const API_URL = 'https://script.google.com/macros/s/AKfycbyqHAtqF4xgX18G5bD6NuBTUNn_f0CknM0XJBy-AV7n8f4m-_r3NA27y5v5WzEk5HtZ/exec';
+// ▲▲▲
+const APP_URL = location.origin + location.pathname;   // this page's own address, used in links
+const STEP = 30, MAX_DAYS = 15, MAX_OPTIONS = 8, MAX_SPAN = 7;
+const KINDS = {
+  call: { name:'Zoom or phone call', c:'#2B5A9E' },     // MKP blue
+  days: { name:'Multi-day training', c:'#7B111D' }      // MKP maroon
+};
+// Time zones offered in the pickers. The visitor's own zone is added if it isn't here.
+const ZLIST = [['America/New_York','Eastern'],['America/Chicago','Central'],['America/Denver','Mountain'],
+  ['America/Phoenix','Arizona'],['America/Los_Angeles','Pacific'],['America/Anchorage','Alaska'],['Pacific/Honolulu','Hawaii']];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const store = {     // browser memory, only for conveniences (a remembered name, your time zone)
+  get(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+// ---------- Time zones ----------
+// The visitor's zone: what their device says, unless they picked another one here.
+const DEVICE_TZ = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York'; } catch (e) { return 'America/New_York'; } })();
+let VTZ = store.get('mkp-tz') || DEVICE_TZ;
+function zoneName(tz) { const z = ZLIST.filter(x => x[0] === tz)[0]; return z ? z[1] : tz.split('/').pop().replace(/_/g, ' '); }
+function zoneOptions(sel) {
+  const list = ZLIST.slice(); if (!list.some(x => x[0] === sel)) list.push([sel, zoneName(sel)]);
+  if (!list.some(x => x[0] === DEVICE_TZ)) list.push([DEVICE_TZ, zoneName(DEVICE_TZ)]);
+  return list.map(z => '<option value="' + esc(z[0]) + '"' + (z[0] === sel ? ' selected' : '') + '>' + esc(z[1]) + '</option>').join('');
+}
+// How far a zone is from UTC at a given moment (handles daylight saving).
+function tzOff(tz, ms) {
+  const p = {}; new Intl.DateTimeFormat('en-US', { timeZone:tz, hour12:false, year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', second:'2-digit' }).formatToParts(new Date(ms)).forEach(x => p[x.type] = x.value);
+  return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second) - Math.floor(ms / 1000) * 1000;
+}
+// "2026-11-09" + minutes after midnight, in a zone → the real moment.
+function wallMs(day, minutes, tz) {
+  const d = day.split('-').map(Number), naive = Date.UTC(d[0], d[1] - 1, d[2]) + minutes * 60000;
+  let ms = naive - tzOff(tz, naive); ms = naive - tzOff(tz, ms); return ms;
+}
+function fmtT(ms) { return new Date(ms).toLocaleTimeString('en-US', { timeZone:VTZ, hour:'numeric', minute:'2-digit' }).replace(' AM', ' am').replace(' PM', ' pm'); }
+function fmtDayMs(ms) { return new Date(ms).toLocaleDateString('en-US', { timeZone:VTZ, weekday:'short', month:'short', day:'numeric' }); }
+function ymdIn(ms, tz) { return new Date(ms).toLocaleDateString('en-CA', { timeZone:tz }); }   // "2026-11-09"
+
+// ---------- Dates (calendar days, no time zone) ----------
+function parseDay(s) { const p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function addDays(s, n) { const d = parseDay(s); d.setDate(d.getDate() + n); return ymd(d); }
+function dayShort(s) { return parseDay(s).toLocaleDateString('en-US', { weekday:'short' }); }
+function dayNum(s) { return parseDay(s).toLocaleDateString('en-US', { month:'short', day:'numeric' }); }
+function dayLong(s) { return parseDay(s).toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }); }
+function optText(start, span) { return span > 1 ? dayLong(start) + ' – ' + dayLong(addDays(start, span - 1)) : dayLong(start); }
+function clock(m) { m = m % 1440; const h = Math.floor(m / 60), h12 = ((h + 11) % 12) + 1; return h12 + ':' + String(m % 60).padStart(2, '0') + (h < 12 ? ' am' : ' pm'); }
+function lengthWords(m) { return m % 60 ? m + '-minute' : (m / 60) + '-hour'; }
+
+function setKind(kind) {
+  const c = (KINDS[kind] || KINDS.call).c, r = document.documentElement.style;
+  r.setProperty('--c', c); r.setProperty('--heat', c);
+}
+// Copy button: also shows the text, because copying can fail on some phones.
+function copyText(btn, text) {
+  const label = btn.textContent;
+  const done = ok => { btn.textContent = ok ? 'Copied' : 'Press and hold the link to copy'; setTimeout(() => btn.textContent = label, 2500); };
+  const fallback = () => {
+    const t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', '');
+    t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t);
+    t.select(); t.setSelectionRange(0, text.length);
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    t.remove(); done(ok);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => done(true), fallback);
+  else fallback();
+}
+// Asks the script for data through the front door (a plain "get" request, no cookies, no sign-in).
+// Every failure turns into a message on the page.
+function call(fn, args, ok, bad) {
+  const url = API_URL + '?fn=' + encodeURIComponent(fn) + '&args=' + encodeURIComponent(JSON.stringify(args));
+  fetch(url, { cache:'no-store' })
+    .then(r => r.json())
+    .then(res => res, () => null)
+    .then(res => {
+      if (!res) return bad('Couldn\'t reach the server. Check your connection and try again.');
+      if (res.ok) ok(res.data); else bad(res.error || 'Something went wrong. Try again in a moment.');
+    });
+}
+function setHash(h) { history.replaceState(null, '', h ? '#' + h : location.pathname); }
+
+// Draws a month calendar. isOn/isSpan decide the look of each day; onTap gets "yyyy-mm-dd".
+function drawCal(box, month, isOn, isSpan, onTap, onMonth, footer) {
+  const first = new Date(month.getFullYear(), month.getMonth(), 1), today = ymd(new Date()), cells = [];
+  for (let i = 0; i < first.getDay(); i++) cells.push('<span></span>');
+  const last = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+  for (let d = 1; d <= last; d++) {
+    const k = ymd(new Date(month.getFullYear(), month.getMonth(), d)), on = isOn(k), sp = !on && isSpan(k);
+    cells.push('<button type="button" data-k="' + k + '" class="' + (on ? 'on' : sp ? 'span' : '') + '" aria-pressed="' + on + '"' + (k < today ? ' disabled' : '') + '>' + d + '</button>');
+  }
+  box.innerHTML = '<div class="cal-head"><button type="button" class="calPrev" aria-label="Previous month">‹</button>' +
+    '<span>' + month.toLocaleDateString('en-US', { month:'long', year:'numeric' }) + '</span>' +
+    '<button type="button" class="calNext" aria-label="Next month">›</button></div>' +
+    '<div class="cal">' + 'SMTWTFS'.split('').map(x => '<div class="dow">' + x + '</div>').join('') + cells.join('') + '</div>' + footer;
+  box.querySelector('.calPrev').onclick = () => onMonth(-1);
+  box.querySelector('.calNext').onclick = () => onMonth(1);
+  box.querySelector('.cal').onclick = e => { const b = e.target.closest('button[data-k]'); if (b && !b.disabled) onTap(b.dataset.k); };
+}
+
+// ===================== Create a poll =====================
+const C = { kind:'call', mode:'row', start:'', count:5, picked:[], month:null, span:3, options:[], tz:VTZ };
+
+function renderCreate() {
+  setKind(C.kind);
+  $('title').textContent = 'Find a time together';
+  $('sub').textContent = 'Set up a poll. Everyone marks what works, and you see where it overlaps.';
+  const t = new Date(); t.setDate(t.getDate() + 1);
+  if (!C.start) C.start = ymd(t);
+  if (!C.month) C.month = new Date(t.getFullYear(), t.getMonth(), 1);
+  const me = store.get('mkp-me') || {};
+  $('app').innerHTML =
+    '<div class="card"><h2>What\'s it for?</h2>' +
+      '<label class="f" for="cTitle">Meeting name</label><input type="text" id="cTitle" maxlength="120" placeholder="I-group leaders call">' +
+      '<label class="f">Kind of meeting</label><div class="seg" id="cKind">' +
+        Object.keys(KINDS).map(k => '<button type="button" data-k="' + k + '" aria-pressed="' + (k === C.kind) + '">' + KINDS[k].name + '</button>').join('') + '</div>' +
+      '<label class="f" for="cNote">Note for everyone <span class="hint">(optional)</span></label><textarea id="cNote" maxlength="500" placeholder="Where, what to bring, what we\'ll cover"></textarea>' +
+    '</div>' +
+    '<div id="cWhen"></div>' +
+    '<div class="card"><h2>About you</h2>' +
+      '<label class="f" for="cName">Your name</label><input type="text" id="cName" maxlength="60" autocomplete="name" value="' + esc(me.name || '') + '">' +
+      '<label class="f" for="cEmail">Your email</label><input type="email" id="cEmail" maxlength="120" autocomplete="email" value="' + esc(me.email || '') + '">' +
+      '<div class="hint" style="margin-top:6px">We\'ll email you the links, and let you know the first time each person answers.</div>' +
+    '</div>' +
+    '<button class="btn wide" type="button" id="cGo">Create poll</button><div class="err" id="cErr" role="alert"></div>' +
+    '<div class="card" style="margin-top:20px"><h2>Lost your links?</h2>' +
+      '<div class="hint">Type the email you used and we\'ll send you the links to every poll you\'ve made.</div>' +
+      '<label class="f" for="fEmail">Your email</label><input type="email" id="fEmail" maxlength="120" autocomplete="email" value="' + esc(me.email || '') + '">' +
+      '<button class="btn small ghost" type="button" id="fGo" style="margin-top:10px">Email me my polls</button><div class="hint" id="fMsg" role="status" style="margin-top:8px"></div>' +
+    '</div>';
+  drawWhen();
+  $('cKind').onclick = e => { const b = e.target.closest('button'); if (!b) return;
+    C.kind = b.dataset.k; setKind(C.kind); $('cKind').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); drawWhen(); };
+  $('cGo').onclick = submitCreate;
+  $('fGo').onclick = () => {
+    const em = $('fEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { $('fMsg').className = 'err'; $('fMsg').textContent = 'Please add a valid email.'; return; }
+    $('fGo').disabled = true; $('fMsg').className = 'hint'; $('fMsg').textContent = 'Sending…';
+    call('emailMyPolls', [em], () => { $('fGo').disabled = false; $('fMsg').textContent = 'If you\'ve made polls with that email, the links are on their way. Check your inbox (and spam).'; },
+      msg => { $('fGo').disabled = false; $('fMsg').className = 'err'; $('fMsg').textContent = msg; });
+  };
+}
+
+// The "when" part of the create screen depends on the kind of meeting.
+function drawWhen() {
+  const box = $('cWhen');
+  if (C.kind === 'call') {
+    const times = []; for (let m = 0; m <= 1440; m += STEP) times.push(m);
+    const opt = (m, sel) => '<option value="' + m + '"' + (m === sel ? ' selected' : '') + '>' + (m === 1440 ? 'Midnight' : m === 0 ? 'Midnight (start)' : clock(m)) + '</option>';
+    box.innerHTML =
+      '<div class="card"><h2>Which days?</h2>' +
+        '<div class="seg" id="cMode"><button type="button" data-m="row" aria-pressed="' + (C.mode === 'row') + '">Days in a row</button>' +
+        '<button type="button" data-m="pick" aria-pressed="' + (C.mode === 'pick') + '">Pick days</button></div>' +
+        '<div id="cDays"></div></div>' +
+      '<div class="card"><h2>What hours?</h2>' +
+        '<div class="two"><div><label class="f" for="cStart">Earliest</label><select id="cStart">' + times.slice(0, -1).map(m => opt(m, 540)).join('') + '</select></div>' +
+        '<div><label class="f" for="cEnd">Latest</label><select id="cEnd">' + times.slice(1).map(m => opt(m, 1260)).join('') + '</select></div></div>' +
+        '<div class="two"><div><label class="f" for="cLen">Meeting length</label><select id="cLen">' +
+          [[15,'15 minutes'],[30,'30 minutes'],[45,'45 minutes'],[60,'1 hour'],[90,'1½ hours'],[120,'2 hours'],[180,'3 hours']]
+            .map(x => '<option value="' + x[0] + '"' + (x[0] === 60 ? ' selected' : '') + '>' + x[1] + '</option>').join('') + '</select></div>' +
+        '<div><label class="f" for="cTz">Your time zone</label><select id="cTz">' + zoneOptions(C.tz) + '</select></div></div>' +
+        '<div class="hint" style="margin-top:6px">These hours are in your time zone. Everyone else sees them in theirs.</div>' +
+      '</div>';
+    $('cTz').onchange = () => C.tz = $('cTz').value;
+    $('cMode').onclick = e => { const b = e.target.closest('button'); if (!b) return;
+      C.mode = b.dataset.m; $('cMode').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); drawDays(); };
+    drawDays();
+  } else {
+    box.innerHTML =
+      '<div class="card"><h2>How long is the training?</h2>' +
+        '<select id="cSpan">' + Array.from({ length:MAX_SPAN }, (_, i) => '<option value="' + (i + 1) + '"' + (i + 1 === C.span ? ' selected' : '') + '>' +
+          (i + 1) + (i ? ' days' : ' day') + '</option>').join('') + '</select></div>' +
+      '<div class="card"><h2>Which dates can people choose from?</h2>' +
+        '<div class="hint">Tap the <b>first day</b> of each option you\'ll allow. For a weekend training, tap the Friday of each weekend. People will only see these options.</div>' +
+        '<div id="cOpts"></div></div>';
+    $('cSpan').onchange = () => { C.span = Number($('cSpan').value); drawOptions(); };
+    drawOptions();
+  }
+}
+
+function drawDays() {
+  const box = $('cDays');
+  if (C.mode === 'row') {
+    box.innerHTML = '<div class="two"><div><label class="f" for="cFrom">First day</label><input type="date" id="cFrom" value="' + C.start + '" min="' + ymd(new Date()) + '"></div>' +
+      '<div><label class="f" for="cCount">How many days</label><select id="cCount">' +
+      Array.from({ length:MAX_DAYS }, (_, i) => '<option' + (i + 1 === C.count ? ' selected' : '') + '>' + (i + 1) + '</option>').join('') +
+      '</select></div></div><div class="hint" id="cRange" style="margin-top:8px"></div>';
+    const upd = () => { C.start = $('cFrom').value || C.start; C.count = Number($('cCount').value);
+      const d = rowDays(); $('cRange').textContent = d.length ? dayLong(d[0]) + ' through ' + dayLong(d[d.length - 1]) : ''; };
+    $('cFrom').onchange = upd; $('cCount').onchange = upd; upd();
+  } else {
+    drawCal(box, C.month, k => C.picked.indexOf(k) !== -1, () => false,
+      k => { const i = C.picked.indexOf(k); if (i !== -1) C.picked.splice(i, 1); else if (C.picked.length < MAX_DAYS) C.picked.push(k); C.picked.sort(); drawDays(); },
+      step => { C.month = new Date(C.month.getFullYear(), C.month.getMonth() + step, 1); drawDays(); },
+      '<div class="hint" style="margin-top:8px">' + C.picked.length + ' of ' + MAX_DAYS + ' days picked. Tap a day to add or remove it.</div>');
+  }
+}
+function rowDays() { const out = []; for (let i = 0; i < C.count; i++) out.push(addDays(C.start, i)); return out; }
+
+// Training options: each tapped day starts an option that runs C.span days.
+function drawOptions() {
+  const box = $('cOpts');
+  const covered = k => C.options.some(o => k > o && k <= addDays(o, C.span - 1));
+  drawCal(box, C.month, k => C.options.indexOf(k) !== -1, covered,
+    k => { const i = C.options.indexOf(k); if (i !== -1) C.options.splice(i, 1); else if (C.options.length < MAX_OPTIONS) C.options.push(k); C.options.sort(); drawOptions(); },
+    step => { C.month = new Date(C.month.getFullYear(), C.month.getMonth() + step, 1); drawOptions(); },
+    '<div class="opts">' + (C.options.length ? '<ul>' + C.options.map((o, i) =>
+      '<li><span><b>Option ' + (i + 1) + ':</b> ' + optText(o, C.span) + '</span>' +
+      '<button type="button" class="btn small ghost" data-rm="' + o + '" aria-label="Remove option ' + (i + 1) + '">Remove</button></li>').join('') + '</ul>'
+      : '<div class="hint" style="margin-top:8px">No options yet. Tap a start day above.</div>') +
+    '<div class="hint" style="margin-top:6px">' + C.options.length + ' of ' + MAX_OPTIONS + ' options.</div></div>');
+  box.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { C.options.splice(C.options.indexOf(b.dataset.rm), 1); drawOptions(); });
+}
+
+function submitCreate() {
+  const f = { title:$('cTitle').value, note:$('cNote').value, kind:C.kind, organizer:$('cName').value, email:$('cEmail').value };
+  const err = m => { $('cErr').textContent = m; };
+  if (!f.title.trim()) return err('Please give the meeting a name.');
+  if (C.kind === 'call') {
+    Object.assign(f, { days: C.mode === 'row' ? rowDays() : C.picked.slice(), start:Number($('cStart').value),
+      end:Number($('cEnd').value), length:Number($('cLen').value), tz:$('cTz').value });
+    if (f.end <= f.start) return err('The latest time needs to be after the earliest time.');
+    if (!f.days.length) return err('Please pick at least one day.');
+  } else {
+    Object.assign(f, { days:C.options.slice(), span:C.span, tz:VTZ });
+    if (!f.days.length) return err('Please tap the first day of at least one date option.');
+  }
+  if (!f.organizer.trim()) return err('Please add your name.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) return err('Please add a valid email so we can send you your links.');
+  $('cGo').disabled = true; $('cGo').textContent = 'Creating…'; err('');
+  store.set('mkp-me', { name:f.organizer.trim(), email:f.email.trim().toLowerCase() });
+  call('createPoll', [f], r => {
+    setHash(r.id + '-' + r.admin);
+    showCreated(r, f.title);
+  }, msg => { $('cGo').disabled = false; $('cGo').textContent = 'Create poll'; err(msg); });
+}
+
+function showCreated(r, title) {
+  const share = APP_URL + '#' + r.id, admin = share + '-' + r.admin;
+  $('title').textContent = title; $('sub').textContent = 'Your poll is ready. We\'ve emailed you both links.';
+  $('app').innerHTML =
+    '<div class="card"><h2>✉️ Guest link: send this one</h2><div class="hint" style="margin-bottom:8px">Send it to everyone you\'re inviting, by email, text or WhatsApp.</div>' +
+      '<div class="link"><code>' + esc(share) + '</code><button class="btn small" type="button" id="cp1">Copy</button></div></div>' +
+    '<div class="card"><h2>🔒 Your private link: don\'t send</h2><div class="hint" style="margin-bottom:8px">Just for you (or a co-organizer). It shows everyone\'s emails and lets you choose the final date or time. It\'s in your email too.</div>' +
+      '<div class="link"><code>' + esc(admin) + '</code><button class="btn small ghost" type="button" id="cp2">Copy</button></div></div>' +
+    '<button class="btn wide" type="button" id="goPoll">Add my own answer</button>';
+  $('cp1').onclick = e => copyText(e.target, share);
+  $('cp2').onclick = e => copyText(e.target, admin);
+  $('goPoll').onclick = () => openPoll(r.id, r.admin);
+}
+
+// ===================== A poll =====================
+const S = { id:'', admin:'', p:null, me:null, mine:null, dirty:false, tab:'mine', day:0, sel:null, saving:false, saved:false, justSaved:false };
+const isDays = () => S.p.kind === 'days';
+const N = () => isDays() ? 1 : (S.p.end - S.p.start) / STEP;          // half hours per day (calls)
+const total = () => isDays() ? S.p.days.length : S.p.days.length * N();
+const slotMs = (d, i) => wallMs(S.p.days[d], S.p.start + i * STEP, S.p.tz);   // the real moment of a half hour
+// Label for a half hour in the visitor's zone; adds the weekday if it falls on a different date there.
+function rowLabel(d, i) {
+  const ms = slotMs(d, i);
+  return (ymdIn(ms, VTZ) !== S.p.days[d] ? new Date(ms).toLocaleDateString('en-US', { timeZone:VTZ, weekday:'short' }) + ' ' : '') + fmtT(ms);
+}
+
+function openPoll(id, admin) {
+  S.id = id; S.admin = admin || ''; S.justSaved = false;
+  S.me = store.get('mkp-me');
+  $('app').innerHTML = '<div class="center">Opening the poll…</div>';
+  call('getPoll', [id, S.admin, S.me && S.me.email], p => {
+    if (!p) { $('app').innerHTML = '<div class="center">We couldn\'t find this poll. Check the link and try again.</div>'; return; }
+    loadPoll(p);
+    if (S.p.final || S.p.status === 'closed' || (S.saved && !S.dirty)) S.tab = 'group';
+    renderPoll();
+  }, msg => { $('app').innerHTML = '<div class="center">' + esc(msg) + '</div>'; });
+}
+
+function loadPoll(p) {
+  S.p = p; setKind(p.kind);
+  const mineRow = p.people.filter(x => x.me)[0];
+  S.saved = !!mineRow;
+  if (!S.dirty) S.mine = mineRow ? mineRow.slots.split('').map(Number) : new Array(total()).fill(0);
+  if (S.day >= p.days.length) S.day = 0;
+  $('title').textContent = p.title;
+  $('sub').textContent = 'Called by ' + p.organizer + ' · ' +
+    (p.kind === 'days' ? p.length + (p.length > 1 ? '-day training' : '-day event') : 'times shown in your time zone');
+}
+
+function renderPoll() {
+  const p = S.p;
+  let h = '';
+  // Organizer view: say so plainly, and hand over the guest link right here.
+  if (p.isAdmin) h += '<div class="card note"><b>🔒 Your private organizer view.</b> Don\'t send this page\'s address. To invite people, send the guest link:' +
+    '<div class="link" style="margin-top:8px"><code>' + esc(APP_URL + '#' + p.id) + '</code><button class="btn small" type="button" id="aCopy">Copy</button></div></div>';
+  if (S.justSaved) h += '<div class="card note" role="status"><b>✓ Saved.</b> You\'re all set and can close this page. To change your answer later, open the same link again.</div>';
+  if (p.final) h += finalCard();
+  if (p.note) h += '<div class="card" style="white-space:pre-wrap">' + esc(p.note) + '</div>';
+  if (p.status === 'closed' && !p.final) h += '<div class="card"><b>This poll is closed.</b> <span class="hint">Answers can no longer change.</span></div>';
+  if (!isDays()) h += '<div class="hint zone" style="margin:0 0 4px">Times shown in <select id="vz" aria-label="Show times in this time zone">' + zoneOptions(VTZ) + '</select>' +
+    (p.tz !== VTZ ? ' <span>(organizer: ' + esc(zoneName(p.tz)) + ')</span>' : '') + '</div>';
+  h += '<div class="tabs"><div class="seg" id="tabs"><button type="button" data-t="mine" aria-pressed="' + (S.tab === 'mine') + '">' + (isDays() ? 'My answer' : 'My times') + '</button>' +
+       '<button type="button" data-t="group" aria-pressed="' + (S.tab === 'group') + '">Group (' + p.people.length + ')</button></div></div>';
+  h += '<div id="pane"></div>';
+  $('app').innerHTML = h;
+  $('tabs').onclick = e => { const b = e.target.closest('button'); if (!b) return; S.tab = b.dataset.t; S.sel = null; S.justSaved = false; renderPoll(); };
+  if (p.isAdmin) $('aCopy').onclick = e => copyText(e.target, APP_URL + '#' + p.id);
+  if ($('vz')) $('vz').onchange = () => { VTZ = $('vz').value; store.set('mkp-tz', VTZ); renderPoll(); };
+  if (S.tab === 'mine') renderMine(); else renderGroup();
+  updateFoot();
+  const u = $('unfinal'); if (u) u.onclick = e => { e.preventDefault(); adminDo('final', null); };
+}
+
+function finalCard() {
+  const p = S.p, f = p.final;
+  let when, link;
+  if (isDays()) {
+    when = optText(p.days[f.d], p.length);
+    const s = p.days[f.d].replace(/-/g, ''), e = addDays(p.days[f.d], p.length).replace(/-/g, '');
+    link = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(p.title) + '&dates=' + s + '/' + e;
+  } else {
+    const a = slotMs(f.d, f.s), b = a + p.length * 60000;
+    const stamp = ms => new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    when = fmtDayMs(a) + ', ' + fmtT(a) + ' – ' + fmtT(b) + ' ' + zoneName(VTZ);
+    link = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(p.title) + '&dates=' + stamp(a) + '/' + stamp(b);
+  }
+  if (p.note) link += '&details=' + encodeURIComponent(p.note);
+  return '<div class="card final"><div class="hint" style="color:#d6dae0">' + (isDays() ? 'Training dates chosen' : 'Meeting time chosen') + '</div>' +
+    '<div class="head" style="font-size:20px;font-weight:700;margin:4px 0 8px">' + esc(when) + '</div>' +
+    '<a href="' + esc(link) + '" target="_blank" rel="noopener" class="tap">Add to Google Calendar</a>' +
+    (p.isAdmin ? ' &nbsp;·&nbsp; <a href="#" class="tap" id="unfinal">Undo</a>' : '') + '</div>';
+}
+
+function dayTabs(extra) {
+  return '<div class="days" id="dayTabs">' + S.p.days.map((d, i) =>
+    '<button type="button" class="day" data-i="' + i + '" aria-pressed="' + (i === S.day) + '">' +
+    (extra ? extra(i) : '') + '<b>' + dayShort(d) + '</b><span>' + dayNum(d) + '</span></button>').join('') + '</div>';
+}
+function bindDayTabs(redraw) {
+  $('dayTabs').onclick = e => { const b = e.target.closest('.day'); if (!b) return; S.day = Number(b.dataset.i); S.sel = null; redraw(); };
+  const cur = $('dayTabs').querySelector('[aria-pressed=true]'); if (cur) cur.scrollIntoView({ block:'nearest', inline:'center' });
+}
+
+// ---------- My answer ----------
+function renderMine() {
+  const pane = $('pane'), p = S.p;
+  if (!S.me || !S.me.name || !S.me.email) { renderWho(); return; }
+  const locked = p.status === 'closed';
+  const steps = isDays()
+    ? '<b>1.</b> Tap every option you can make.<br><b>2.</b> Tap <b>Save</b> at the bottom.'
+    : '<b>1.</b> Tap every half hour you\'re free. Use the date tabs to switch days.<br><b>2.</b> Tap <b>Save</b> at the bottom.';
+  let body = '';
+  if (isDays()) {
+    body = '<div class="rows" id="rows">' + p.days.map((d, i) => {
+      const on = S.mine[i] === 1;
+      return '<button type="button" class="row opt' + (on ? ' on' : '') + '" data-i="' + i + '"' + (locked ? ' disabled' : '') + '>' +
+        '<span class="t">' + optText(d, p.length) + '</span><span class="v">' + (on ? '✓ I can make it' : 'Tap if you can') + '</span></button>';
+    }).join('') + '</div>';
+  } else {
+    const n = N(), base = S.day * n;
+    let rows = '';
+    for (let i = 0; i < n; i++) {
+      const on = S.mine[base + i] === 1, ms = slotMs(S.day, i);
+      rows += '<button type="button" class="row' + (on ? ' on' : '') + (new Date(ms).getUTCMinutes() === 0 ? ' hour' : '') + '" data-i="' + (base + i) + '"' + (locked ? ' disabled' : '') + '>' +
+        '<span class="t">' + rowLabel(S.day, i) + '</span><span class="v">' + (on ? 'Free' : '') + '</span></button>';
+    }
+    body = dayTabs(i => S.mine.slice(i * n, i * n + n).indexOf(1) !== -1 ? '<span class="pip"></span>' : '') +
+      (locked ? '' : '<div class="tools"><button type="button" class="btn small ghost" data-a="all">Free all day</button>' +
+        '<button type="button" class="btn small ghost" data-a="clear">Clear day</button>' +
+        (p.days.length > 1 ? '<button type="button" class="btn small ghost" data-a="copy">Copy to every day</button>' : '') + '</div>') +
+      '<div class="hint" style="margin-bottom:6px">' + dayLong(p.days[S.day]) + ', in ' + esc(zoneName(VTZ)) + ' time</div>' +
+      '<div class="rows" id="rows">' + rows + '</div>';
+  }
+  pane.innerHTML =
+    (locked ? '' : '<div class="card" style="padding:10px 14px">' + steps + '</div>') +
+    '<div class="hint" style="margin-bottom:8px">Answering as <b>' + esc(S.me.name) + '</b> · <a href="#" class="tap" id="notMe">not you?</a></div>' +
+    body +
+    (locked ? '' : '<button class="btn wide" type="button" id="saveBottom" style="margin-top:12px"></button>' +
+      '<div class="hint" id="saveHint" style="margin-top:6px;text-align:center"></div>');
+  if (!isDays()) bindDayTabs(renderMine);
+  $('notMe').onclick = e => { e.preventDefault(); S.me = null; S.dirty = false; S.mine = null; store.set('mkp-me', null); openPoll(S.id, S.admin); };
+  if (locked) return;
+  $('saveBottom').onclick = saveTimes; updateFoot();
+  if (!isDays()) {
+    const n = N(), base = S.day * n;
+    pane.querySelector('.tools').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const a = b.dataset.a, day = S.mine.slice(base, base + n);
+      if (a === 'all' || a === 'clear') for (let i = 0; i < n; i++) S.mine[base + i] = a === 'all' ? 1 : 0;
+      if (a === 'copy') for (let d = 0; d < p.days.length; d++) for (let i = 0; i < n; i++) S.mine[d * n + i] = day[i];
+      S.dirty = true; renderMine();
+    };
+  }
+  bindPaint($('rows'));
+}
+
+// Tap toggles. With a mouse you can also click and drag to paint a stretch of time.
+function bindPaint(box) {
+  let painting = false, val = 1, mouse = false;
+  const set = btn => { const k = Number(btn.dataset.i); if (S.mine[k] === val) return;
+    S.mine[k] = val; btn.classList.toggle('on', val === 1);
+    btn.querySelector('.v').textContent = val ? (isDays() ? '✓ I can make it' : 'Free') : (isDays() ? 'Tap if you can' : '');
+    S.dirty = true; updateFoot(); };
+  box.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse' || isDays()) return;
+    const b = e.target.closest('.row'); if (!b || b.disabled) return;
+    mouse = true; painting = true; val = S.mine[Number(b.dataset.i)] ? 0 : 1; set(b); e.preventDefault();
+  });
+  box.addEventListener('pointerover', e => { if (!painting) return; const b = e.target.closest('.row'); if (b) set(b); });
+  window.addEventListener('pointerup', () => { if (painting) { painting = false; refreshPips(); } });
+  box.addEventListener('click', e => {
+    if (mouse) { mouse = false; return; }
+    const b = e.target.closest('.row'); if (!b || b.disabled) return;
+    val = S.mine[Number(b.dataset.i)] ? 0 : 1; set(b); refreshPips();
+  });
+}
+function refreshPips() {
+  if (isDays()) return;
+  const n = N(), b = $('dayTabs').querySelectorAll('.day')[S.day];
+  const has = S.mine.slice(S.day * n, S.day * n + n).indexOf(1) !== -1, pip = b.querySelector('.pip');
+  if (has && !pip) b.insertAdjacentHTML('afterbegin', '<span class="pip"></span>'); else if (!has && pip) pip.remove();
+}
+
+function renderWho() {
+  $('pane').innerHTML = '<div class="card"><h2>Who\'s answering?</h2>' +
+    '<label class="f" for="wName">Your name</label><input type="text" id="wName" maxlength="60" autocomplete="name">' +
+    '<label class="f" for="wEmail">Your email</label><input type="email" id="wEmail" maxlength="120" autocomplete="email">' +
+    '<div class="hint" style="margin-top:6px">Your email only brings back your own answer later. Others see just your name.</div>' +
+    '<button class="btn wide" type="button" id="wGo" style="margin-top:12px">Continue</button><div class="err" id="wErr" role="alert"></div></div>';
+  $('wGo').onclick = () => {
+    const name = $('wName').value.trim(), email = $('wEmail').value.trim().toLowerCase();
+    if (!name) { $('wErr').textContent = 'Please add your name.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('wErr').textContent = 'Please add a valid email.'; return; }
+    S.me = { name:name, email:email }; store.set('mkp-me', S.me); S.dirty = false;
+    openPoll(S.id, S.admin);
+  };
+}
+
+// Keeps both Save buttons (under the answer, and the bar stuck to the bottom) up to date.
+function updateFoot() {
+  const show = S.tab === 'mine' && S.me && S.p && S.p.status !== 'closed' && (S.dirty || S.saving);
+  $('foot').style.display = show ? 'block' : 'none';
+  $('footMsg').textContent = S.saving ? 'Saving…' : 'You have changes that aren\'t saved yet.';
+  $('saveBtn').disabled = S.saving;
+  const b = $('saveBottom'), hint = $('saveHint');
+  if (b) {
+    const done = S.saved && !S.dirty && !S.saving;
+    b.textContent = S.saving ? 'Saving…' : done ? '✓ Saved' : 'Save';
+    b.disabled = S.saving || done;
+    hint.className = 'hint'; hint.textContent = done ? 'Your answer is saved. Change anything above to update it.' : '';
+  }
+}
+function saveTimes() {
+  S.saving = true; updateFoot();
+  call('saveResponse', [S.id, S.me.name, S.me.email, S.mine.join(''), S.admin], p => {
+    S.saving = false; S.dirty = false; loadPoll(p); S.tab = 'group'; S.justSaved = true; renderPoll();
+    window.scrollTo(0, 0);
+  }, msg => { S.saving = false; updateFoot(); $('footMsg').textContent = msg;
+    const h = $('saveHint'); if (h) { h.className = 'err'; h.textContent = msg; } });
+}
+$('saveBtn').onclick = saveTimes;
+
+// ---------- Group ----------
+function renderGroup() {
+  const p = S.p, people = p.people.length, pane = $('pane');
+  if (!people) {
+    pane.innerHTML = '<div class="card center" style="padding:24px">No one has answered yet. Share the guest link and check back.</div>' + adminCard();
+    bindAdmin(); return;
+  }
+  if (isDays()) renderGroupDays(pane); else renderGroupCall(pane);
+  bindAdmin();
+}
+
+// Trainings: one row per date option, with who can and can't make it.
+function renderGroupDays(pane) {
+  const p = S.p, total = p.people.length;
+  const counts = p.days.map((d, i) => p.people.filter(x => x.slots.charAt(i) === '1'));
+  const most = Math.max.apply(null, counts.map(c => c.length));
+  let h = S.dirty ? '<div class="card hint">Your latest changes aren\'t saved, so they don\'t show here yet.</div>' : '';
+  h += '<div class="card"><h2>Which dates work</h2><div class="hint" style="margin-bottom:8px">Tap an option to see who can make it.</div><div class="rows" id="grows">';
+  p.days.forEach((d, i) => {
+    const yes = counts[i], sel = S.sel === i;
+    h += '<button type="button" class="row opt' + (sel ? ' sel' : '') + '" data-i="' + i + '" style="flex-wrap:wrap">' +
+      '<span class="t" style="flex-basis:100%">' + optText(d, p.length) + (yes.length && yes.length === most ? ' <span class="pill">' + (yes.length === total ? 'Everyone' : 'Most') + '</span>' : '') + '</span>' +
+      '<span class="bar"><i style="width:' + (100 * yes.length / total) + '%"></i></span><span class="n">' + yes.length + '/' + total + '</span></button>';
+    if (sel) {
+      const no = p.people.filter(x => yes.indexOf(x) === -1);
+      h += '<div class="who"><div><b>Can make it:</b> ' + (yes.length ? esc(yes.map(x => x.name).join(', ')) : 'nobody yet') + '</div>' +
+        (no.length ? '<div class="no"><b>Can\'t:</b> ' + esc(no.map(x => x.name).join(', ')) + '</div>' : '') +
+        (p.isAdmin ? '<button type="button" class="btn small" id="pickOpt" style="margin-top:10px">Choose these dates</button>' : '') + '</div>';
+    }
+  });
+  h += '</div></div>' + adminCard();
+  pane.innerHTML = h;
+  $('grows').onclick = e => { const b = e.target.closest('.row'); if (!b) return; const i = Number(b.dataset.i); S.sel = S.sel === i ? null : i; renderGroup(); };
+  const pk = $('pickOpt'); if (pk) pk.onclick = () => adminDo('final', { d:S.sel });
+}
+
+function freeAt(d, i) { const n = N(); return S.p.people.filter(x => x.slots.charAt(d * n + i) === '1'); }
+function slotsNeeded() { return Math.max(1, Math.min(N(), Math.ceil(S.p.length / STEP))); }
+function bestTimes() {
+  const p = S.p, n = N(), L = slotsNeeded(), out = [];
+  for (let d = 0; d < p.days.length; d++) {
+    let cur = null;
+    for (let i = 0; i + L <= n; i++) {
+      const who = p.people.map((x, k) => { for (let j = i; j < i + L; j++) if (x.slots.charAt(d * n + j) !== '1') return -1; return k; }).filter(k => k !== -1);
+      const key = who.join(',');
+      if (cur && cur.key === key) { cur.e = i + L; continue; }
+      if (cur && cur.who.length) out.push(cur);
+      cur = { d:d, s:i, e:i + L, who:who, key:key };
+    }
+    if (cur && cur.who.length) out.push(cur);
+  }
+  out.sort((a, b) => b.who.length - a.who.length || (b.e - b.s) - (a.e - a.s) || a.d - b.d || a.s - b.s);
+  return out.slice(0, 5);
+}
+
+// Calls: best times, every day at a glance, and day by day. All times in the visitor's zone.
+function renderGroupCall(pane) {
+  const p = S.p, n = N(), total = p.people.length, L = slotsNeeded();
+  let h = S.dirty ? '<div class="card hint">Your latest changes aren\'t saved, so they don\'t show here yet.</div>' : '';
+  const best = bestTimes();
+  h += '<div class="card best"><h2>Best times for a ' + lengthWords(p.length) + ' meeting</h2>';
+  if (!best.length) h += '<div class="hint">No ' + lengthWords(p.length) + ' stretch works for anyone yet.</div>';
+  else h += '<ul>' + best.map((b, k) => {
+    const missing = p.people.filter((x, i) => b.who.indexOf(i) === -1).map(x => x.name), a = slotMs(b.d, b.s);
+    return '<li><div class="grow"><div class="when">' + fmtDayMs(a) + ', ' + fmtT(a) + ' – ' + fmtT(a + (b.e - b.s) * STEP * 60000) + '</div>' +
+      '<div class="meta">' + (b.who.length === total ? '<span class="pill">Everyone</span>' : b.who.length + ' of ' + total + ' free · missing ' + esc(missing.join(', '))) + '</div></div>' +
+      (p.isAdmin ? '<button type="button" class="btn small" data-pick="' + k + '">Choose</button>' : '') + '</li>';
+  }).join('') + '</ul>' + (p.isAdmin ? '<div class="hint" style="margin-top:6px">Choose sets the meeting at the start of that stretch. For a later start, tap a time in the day view below.</div>' : '');
+  h += '</div>';
+
+  const cols = p.days.length;
+  h += '<div class="card"><h2>All days at a glance</h2><div class="heat" style="grid-template-columns:52px repeat(' + cols + ', 1fr)"><span></span>' +
+    p.days.map(d => '<span class="h">' + dayShort(d).charAt(0) + parseDay(d).getDate() + '</span>').join('');
+  for (let i = 0; i < n; i++) {
+    const ms = slotMs(0, i);
+    h += '<span class="tl">' + (i % 4 === 0 ? fmtT(ms).replace(':00', '') : '') + '</span>';
+    for (let d = 0; d < cols; d++) {
+      const c = freeAt(d, i).length;
+      h += '<button type="button" data-d="' + d + '" data-i="' + i + '" aria-label="' + dayLong(p.days[d]) + ' ' + rowLabel(d, i) + ', ' + c + ' free"' +
+        ' style="' + (c ? 'background:var(--heat);opacity:' + (0.18 + 0.82 * c / total).toFixed(2) : '') + '"></button>';
+    }
+  }
+  h += '</div><div class="legend"><i style="background:var(--soft)"></i>nobody<i style="background:var(--heat);opacity:.45"></i>some<i style="background:var(--heat)"></i>everyone · tap to open that day</div></div>';
+
+  h += '<div class="card"><h2>Day by day</h2>' + dayTabs() + '<div class="rows" id="grows">';
+  for (let i = 0; i < n; i++) {
+    const free = freeAt(S.day, i), sel = S.sel === i, ms = slotMs(S.day, i);
+    h += '<button type="button" class="row' + (new Date(ms).getUTCMinutes() === 0 ? ' hour' : '') + (sel ? ' sel' : '') + '" data-i="' + i + '">' +
+      '<span class="t">' + rowLabel(S.day, i) + '</span><span class="bar"><i style="width:' + (100 * free.length / total) + '%"></i></span>' +
+      '<span class="n">' + free.length + '/' + total + '</span></button>';
+    if (sel) {
+      const no = p.people.filter(x => free.indexOf(x) === -1);
+      h += '<div class="who"><div><b>Free:</b> ' + (free.length ? esc(free.map(x => x.name).join(', ')) : 'nobody') + '</div>' +
+        (no.length ? '<div class="no"><b>Not free:</b> ' + esc(no.map(x => x.name).join(', ')) + '</div>' : '') +
+        (p.isAdmin && i + L <= n ? '<button type="button" class="btn small" id="startHere" style="margin-top:10px">Start the meeting at ' + fmtT(ms) + '</button>' : '') + '</div>';
+    }
+  }
+  h += '</div></div>' + adminCard();
+  pane.innerHTML = h;
+
+  bindDayTabs(renderGroup);
+  pane.querySelector('.heat').onclick = e => { const b = e.target.closest('button'); if (!b) return;
+    S.day = Number(b.dataset.d); S.sel = Number(b.dataset.i); renderGroup();
+    const r = $('grows').querySelector('.sel'); if (r) r.scrollIntoView({ block:'center' }); };
+  $('grows').onclick = e => { const b = e.target.closest('.row'); if (!b) return;
+    const i = Number(b.dataset.i); S.sel = S.sel === i ? null : i; renderGroup();
+    const r = $('grows').querySelector('.sel'); if (r) r.scrollIntoView({ block:'nearest' }); };
+  const sh = $('startHere'); if (sh) sh.onclick = () => adminDo('final', { d:S.day, s:S.sel, e:S.sel + L });
+  pane.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => {
+    const x = best[Number(b.dataset.pick)]; adminDo('final', { d:x.d, s:x.s, e:x.s + L }); });
+}
+
+// ---------- Organizer tools ----------
+function adminCard() {
+  const p = S.p; if (!p.isAdmin) return '';
+  return '<div class="card"><h2>Organizer tools</h2>' +
+    '<button type="button" class="btn small ghost" id="aClose">' + (p.status === 'closed' ? 'Reopen the poll' : 'Close the poll') + '</button>' +
+    (p.people.length ? '<div class="people" style="margin-top:12px"><div class="hint" style="margin-bottom:4px">' + p.people.length + ' of ' + p.max + ' people</div><ul>' +
+      p.people.map(x => '<li><span>' + esc(x.name) + ' <span class="hint">' + esc(x.email) + '</span></span>' +
+        '<button type="button" class="btn small ghost" data-rm="' + esc(x.email) + '">Remove</button></li>').join('') + '</ul></div>' : '') +
+    '<div class="err" id="aErr" role="alert"></div></div>';
+}
+function bindAdmin() {
+  if (!S.p.isAdmin) return;
+  $('aClose').onclick = () => adminDo(S.p.status === 'closed' ? 'reopen' : 'close');
+  // Remove takes two taps: the first turns the button red and asks again.
+  $('pane').querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
+    if (b.classList.contains('confirm')) { b.disabled = true; b.textContent = 'Removing…'; adminDo('remove', b.dataset.rm); return; }
+    b.classList.add('confirm'); b.textContent = 'Tap again to remove';
+    setTimeout(() => { if (!b.disabled) { b.classList.remove('confirm'); b.textContent = 'Remove'; } }, 4000);
+  });
+}
+function adminDo(action, value) {
+  call('adminUpdate', [S.id, S.admin, action, value, S.me && S.me.email], p => {
+    loadPoll(p); renderPoll(); if (action === 'final') window.scrollTo(0, 0);
+  }, msg => { const e = $('aErr'); if (e) e.textContent = msg; else showMsg(msg); });
+}
+// Shows an error at the top of the page (instead of a pop-up box).
+function showMsg(msg) {
+  let box = $('pageMsg');
+  if (!box) { $('app').insertAdjacentHTML('afterbegin', '<div class="card err" id="pageMsg" role="alert"></div>'); box = $('pageMsg'); }
+  box.textContent = msg; window.scrollTo(0, 0);
+}
+
+// ===================== Start =====================
+// Link info lives after the "#": #ABCDEFGH is a guest link, #ABCDEFGH-<16 letters> is the organizer's.
+function route() {
+  const h = decodeURIComponent(String(location.hash || '').replace(/^#/, '')).trim();
+  const m = h.match(/^([A-Za-z]{8})(?:-([A-Za-z]{16}))?$/);
+  S.dirty = false; S.tab = 'mine'; S.day = 0; S.sel = null;
+  if (m) openPoll(m[1], m[2]); else renderCreate();
+}
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
