@@ -24,34 +24,34 @@
   /* MKP colors: blue #2B5A9E, gold #FBCA29, gray #86888A, maroon #7B111D, light gold #E7C468 */
   :root { --ink:#1b2333; --quiet:#5f6368; --line:#e3e6ea; --bg:#ffffff; --soft:#f4f6f9;
           --blue:#2B5A9E; --gold:#FBCA29; --gray:#86888A; --maroon:#7B111D;
-          --c:#2B5A9E; --heat:#2B5A9E;
+          --c:#2B5A9E; --heat:#2B5A9E; --fs:1;
           --head:Rockwell, "Rockwell Nova", "Roboto Slab", "DejaVu Serif", Georgia, serif;
           --body:Univers, "Univers LT Std", "Univers Next", "Helvetica Neue", Helvetica, Arial, sans-serif; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { margin:0; font-family:var(--body); color:var(--ink); background:var(--soft); font-size:16px; line-height:1.4; }
+  body { margin:0; font-family:var(--body); color:var(--ink); background:var(--soft); font-size:calc(16px * var(--fs)); line-height:1.4; }
   button, input, select, textarea { font:inherit; color:inherit; }
   h1, h2, .head { font-family:var(--head); }
   .brand { background:#fff; padding:12px 16px 8px; text-align:center; }
   .brand img { width:100%; max-width:280px; height:auto; display:inline-block; }
   .band { background:var(--c); color:#fff; padding:14px 16px 14px; border-bottom:5px solid var(--gold); }
-  .band .kicker { font-size:12px; letter-spacing:.08em; text-transform:uppercase; opacity:.9; }
-  .band h1 { font-weight:700; font-size:26px; margin:2px 0 0; line-height:1.15; }
-  .band .sub { font-size:14px; opacity:.92; margin-top:4px; }
+  .band .kicker { font-size:calc(12px * var(--fs)); letter-spacing:.08em; text-transform:uppercase; opacity:.9; }
+  .band h1 { font-weight:700; font-size:calc(26px * var(--fs)); margin:2px 0 0; line-height:1.15; }
+  .band .sub { font-size:calc(14px * var(--fs)); opacity:.92; margin-top:4px; }
   main { max-width:640px; margin:0 auto; padding:12px 12px 120px; }
   .card { background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px; }
-  .card h2 { font-size:17px; margin:0 0 10px; }
-  label.f { display:block; font-size:14px; font-weight:600; margin:12px 0 4px; }
+  .card h2 { font-size:calc(17px * var(--fs)); margin:0 0 10px; }
+  label.f { display:block; font-size:calc(14px * var(--fs)); font-weight:600; margin:12px 0 4px; }
   label.f:first-child { margin-top:0; }
-  .hint { font-size:13px; color:var(--quiet); }
+  .hint { font-size:calc(13px * var(--fs)); color:var(--quiet); }
   input[type=text], input[type=email], input[type=date], select, textarea {
-    width:100%; max-width:100%; font-size:16px; padding:10px 12px; border:1px solid #c9ced6; border-radius:10px; background:#fff; min-height:44px; }
+    width:100%; max-width:100%; font-size:calc(16px * var(--fs)); padding:10px 12px; border:1px solid #c9ced6; border-radius:10px; background:#fff; min-height:44px; }
   textarea { min-height:70px; resize:vertical; }
   .two { display:flex; gap:10px; } .two > div { flex:1; min-width:0; }
-  .btn { border:0; border-radius:12px; padding:12px 16px; font-size:16px; font-weight:600; min-height:44px;
+  .btn { border:0; border-radius:12px; padding:12px 16px; font-size:calc(16px * var(--fs)); font-weight:600; min-height:44px;
          background:var(--c); color:#fff; cursor:pointer; }
   .btn.wide { width:100%; }
   .btn.ghost { background:#fff; color:var(--ink); border:1px solid #c9ced6; font-weight:500; }
-  .btn.small { padding:8px 12px; font-size:14px; border-radius:10px; }
+  .btn.small { padding:8px 12px; font-size:calc(14px * var(--fs)); border-radius:10px; }
   .btn.confirm { background:#b3261e; color:#fff; border-color:#b3261e; }
   .btn:disabled { opacity:.55; }
   /* Instant feedback: buttons dip when pressed, and show a spinner while waiting on the server */
@@ -62,14 +62,14 @@
   @keyframes spin { to { transform:rotate(360deg); } }
   .tap { display:inline-block; padding:10px 2px; }
   .seg { display:flex; background:var(--soft); border-radius:12px; padding:3px; gap:3px; }
-  .seg button { flex:1; border:0; background:none; padding:9px 6px; border-radius:10px; font-size:15px; cursor:pointer; min-height:44px; }
+  .seg button { flex:1; border:0; background:none; padding:9px 6px; border-radius:10px; font-size:calc(15px * var(--fs)); cursor:pointer; min-height:44px; }
   .seg button[aria-pressed=true] { background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.12); font-weight:600; }
   /* month calendar */
   .cal-head { display:flex; justify-content:space-between; align-items:center; margin:8px 0 6px; font-weight:600; }
-  .cal-head button { border:1px solid var(--line); background:#fff; border-radius:10px; width:44px; height:44px; font-size:18px; cursor:pointer; }
+  .cal-head button { border:1px solid var(--line); background:#fff; border-radius:10px; width:44px; height:44px; font-size:calc(18px * var(--fs)); cursor:pointer; }
   .cal { display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; text-align:center; }
-  .cal .dow { font-size:12px; color:var(--quiet); padding:4px 0; }
-  .cal button { aspect-ratio:1; min-height:44px; border:1px solid var(--line); background:#fff; border-radius:10px; font-size:15px; cursor:pointer; padding:0; }
+  .cal .dow { font-size:calc(12px * var(--fs)); color:var(--quiet); padding:4px 0; }
+  .cal button { aspect-ratio:1; min-height:44px; border:1px solid var(--line); background:#fff; border-radius:10px; font-size:calc(15px * var(--fs)); cursor:pointer; padding:0; }
   .cal button.on { background:var(--c); color:#fff; border-color:var(--c); font-weight:700; }
   .cal button.span { background:#eef0f3; border-color:#c9ced6; background:color-mix(in srgb, var(--c) 14%, white); border-color:color-mix(in srgb, var(--c) 30%, white); }
   .cal button:disabled { opacity:.3; cursor:default; }
@@ -80,7 +80,7 @@
   .days::-webkit-scrollbar { display:none; }
   .day { flex:none; min-width:62px; min-height:50px; border:1px solid var(--line); background:#fff; border-radius:12px; padding:6px 8px;
          text-align:center; cursor:pointer; position:relative; }
-  .day b { display:block; font-size:13px; } .day span { font-size:13px; color:var(--quiet); }
+  .day b { display:block; font-size:calc(13px * var(--fs)); } .day span { font-size:calc(13px * var(--fs)); color:var(--quiet); }
   .day[aria-pressed=true] { background:var(--ink); color:#fff; border-color:var(--ink); }
   .day[aria-pressed=true] span { color:#d6dae0; }
   .day .pip { position:absolute; top:5px; right:6px; width:7px; height:7px; border-radius:50%; background:var(--heat); }
@@ -92,38 +92,38 @@
          background:#fff; padding:0 12px; text-align:left; cursor:pointer; gap:10px; }
   .row:first-child { border-top:0; }
   .row.hour { border-top-color:#c9ced6; }
-  .row .t { width:96px; flex:none; font-size:14px; color:var(--quiet); font-variant-numeric:tabular-nums; }
-  .row .v { flex:1; font-size:14px; }
+  .row .t { width:calc(96px * var(--fs)); flex:none; font-size:calc(14px * var(--fs)); color:var(--quiet); font-variant-numeric:tabular-nums; }
+  .row .v { flex:1; font-size:calc(14px * var(--fs)); }
   .row.on { background:var(--heat); color:#fff; }
   .row.on .t { color:rgba(255,255,255,.85); }
   .row.opt { min-height:64px; padding:10px 14px; }
-  .row.opt .t { width:auto; flex:1; font-size:16px; color:var(--ink); font-weight:600; }
+  .row.opt .t { width:auto; flex:1; font-size:calc(16px * var(--fs)); color:var(--ink); font-weight:600; }
   .row.opt.on .t { color:#fff; }
   .row.opt .v { flex:none; text-align:right; }
   .row .bar { flex:1; height:26px; border-radius:7px; background:var(--soft); position:relative; overflow:hidden; }
   .row .bar i { position:absolute; inset:0 auto 0 0; background:var(--heat); border-radius:7px; }
-  .row .n { width:48px; flex:none; text-align:right; font-size:14px; font-variant-numeric:tabular-nums; }
+  .row .n { width:calc(48px * var(--fs)); flex:none; text-align:right; font-size:calc(14px * var(--fs)); font-variant-numeric:tabular-nums; }
   .row.sel { outline:2px solid var(--ink); outline-offset:-2px; }
-  .who { padding:10px 12px 12px; background:var(--soft); font-size:14px; border-top:1px solid var(--line); }
+  .who { padding:10px 12px 12px; background:var(--soft); font-size:calc(14px * var(--fs)); border-top:1px solid var(--line); }
   .who .no { color:var(--quiet); margin-top:4px; }
   /* overview heatmap */
   .heat { display:grid; gap:2px; }
-  .heat .h { font-size:10px; color:var(--quiet); text-align:center; white-space:nowrap; overflow:hidden; }
-  .heat .tl { font-size:10px; color:var(--quiet); text-align:right; padding-right:4px; line-height:9px; white-space:nowrap; }
+  .heat .h { font-size:calc(10px * var(--fs)); color:var(--quiet); text-align:center; white-space:nowrap; overflow:hidden; }
+  .heat .tl { font-size:calc(10px * var(--fs)); color:var(--quiet); text-align:right; padding-right:4px; line-height:9px; white-space:nowrap; }
   .heat button { height:9px; border:0; padding:0; border-radius:2px; background:var(--soft); cursor:pointer; }
-  .legend { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--quiet); margin-top:8px; flex-wrap:wrap; }
+  .legend { display:flex; align-items:center; gap:6px; font-size:calc(12px * var(--fs)); color:var(--quiet); margin-top:8px; flex-wrap:wrap; }
   .legend i { width:16px; height:10px; border-radius:2px; display:inline-block; }
   .best li { list-style:none; border-top:1px solid var(--line); padding:10px 0; display:flex; gap:10px; align-items:center; }
   .best li:first-child { border-top:0; padding-top:2px; }
   .best ul { margin:0; padding:0; }
-  .best .when { font-weight:600; } .best .meta { font-size:13px; color:var(--quiet); }
+  .best .when { font-weight:600; } .best .meta { font-size:calc(13px * var(--fs)); color:var(--quiet); }
   .best .grow { flex:1; min-width:0; }
-  .pill { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--gold); color:var(--ink); }
+  .pill { display:inline-block; font-size:calc(12px * var(--fs)); font-weight:700; padding:2px 8px; border-radius:999px; background:var(--gold); color:var(--ink); }
   .final { background:var(--ink); color:#fff; border:0; border-left:6px solid var(--gold); }
   .final a { color:#fff; }
-  .note { background:#fff8e1; border-color:#f3dd93; font-size:14px; }
+  .note { background:#fff8e1; border-color:#f3dd93; font-size:calc(14px * var(--fs)); }
   .link { display:flex; gap:8px; align-items:center; }
-  .link code { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px;
+  .link code { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:calc(13px * var(--fs));
                background:var(--soft); padding:10px; border-radius:8px; }
   .people li { list-style:none; display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid var(--line); gap:8px; }
   .people ul { margin:0; padding:0; }
@@ -131,10 +131,43 @@
   .bar-foot { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line);
               padding:10px 12px calc(10px + env(safe-area-inset-bottom)); z-index:5; display:none; }
   .bar-foot .in { max-width:640px; margin:0 auto; display:flex; gap:10px; align-items:center; }
-  .bar-foot .msg { flex:1; font-size:14px; color:var(--quiet); }
-  .err { color:#b3261e; font-size:14px; margin-top:8px; }
+  .bar-foot .msg { flex:1; font-size:calc(14px * var(--fs)); color:var(--quiet); }
+  .err { color:#b3261e; font-size:calc(14px * var(--fs)); margin-top:8px; }
   .center { text-align:center; padding:40px 16px; color:var(--quiet); }
   .zone select { width:auto; display:inline-block; padding:6px 10px; margin-left:4px; }
+  /* ---------- Accessibility ---------- */
+  /* Buttons keep their size; long labels wrap onto a second line instead of growing the button. */
+  button { line-height:1.25; white-space:normal; }
+  :focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+  #title:focus, .a11y h2:focus { outline:none; }   /* only moved there for screen readers; not something to tap */
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  .band { position:relative; padding-right:68px; }
+  .a11y-btn { position:absolute; top:10px; right:12px; width:48px; height:44px; border-radius:10px; border:2px solid rgba(255,255,255,.75);
+              background:rgba(255,255,255,.12); color:#fff; font-family:var(--head); font-weight:700; font-size:18px; cursor:pointer; }
+  .a11y { background:#fff; border-bottom:1px solid var(--line); }
+  .a11y .in { max-width:640px; margin:0 auto; padding:12px; }
+  .a11y h2 { font-size:calc(17px * var(--fs)); margin:0 0 8px; }
+  .a11y .lbl { font-weight:600; font-size:calc(14px * var(--fs)); margin:12px 0 4px; }
+  .chk { display:flex; align-items:center; gap:10px; min-height:44px; font-size:calc(15px * var(--fs)); cursor:pointer; margin-top:6px; }
+  .chk input { width:22px; height:22px; flex:none; }
+  /* Larger text: stack things side by side so nothing gets squeezed or covers the screen */
+  .fs-l .two { flex-direction:column; gap:0; }
+  .fs-l .link { flex-wrap:wrap; } .fs-l .link code { flex-basis:100%; }
+  .fs-l .best li, .fs-l .people li, .fs-l .opts li, .fs-l .row.opt { flex-wrap:wrap; }
+  .fs-l .bar-foot .in { flex-wrap:wrap; } .fs-l .bar-foot .msg { flex-basis:100%; }
+  .fs-l .seg { flex-wrap:wrap; } .fs-l .seg button { flex:1 1 40%; }
+  .fs-l .row .t { width:auto; min-width:calc(96px * var(--fs)); }
+  /* High contrast: darker text and lines, solid outlines, and marks that don't rely on color */
+  .hc { --ink:#000; --quiet:#222; --line:#444; --soft:#e9e9e9; }
+  .hc body { background:#fff; }
+  .hc .card, .hc .rows, .hc .day, .hc input, .hc select, .hc textarea, .hc .cal button, .hc .btn.ghost { border:2px solid #000; }
+  .hc .hint, .hc .meta, .hc .legend { color:#222; }
+  .hc .row.on .v::before, .hc .row.on.opt .v::before { content:'✓ '; }
+  .hc .row.on { background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.18) 0 6px, transparent 6px 12px); }
+  .hc a { text-decoration:underline; }
+  .hc .note { background:#fff3c4; border-color:#000; }
+  .hc .heat button { outline:1px solid #888; }
+  @media (prefers-reduced-motion: reduce) { .working::before { animation:none; } .btn:active:not(:disabled) { transform:none; } }
 </style>
 </head>
 <body>
@@ -144,8 +177,31 @@
     <div class="kicker">MKP Meet · Greater Carolinas</div>
     <h1 id="title">Find a time together</h1>
     <div class="sub" id="sub"></div>
+    <button type="button" class="a11y-btn" id="a11yBtn" aria-expanded="false" aria-controls="a11yPanel" aria-label="Text size, contrast and read aloud">Aa</button>
+  </div>
+  <!-- Display and reading options. Choices are remembered in this browser. -->
+  <div class="a11y" id="a11yPanel" hidden>
+    <div class="in">
+      <h2>Text, contrast and reading</h2>
+      <div class="lbl" id="lFs">Text size</div>
+      <div class="seg" id="aFs" role="group" aria-labelledby="lFs">
+        <button type="button" data-v="1">Standard</button><button type="button" data-v="1.2">Larger</button><button type="button" data-v="1.4">Largest</button></div>
+      <div class="lbl" id="lHc">Contrast</div>
+      <div class="seg" id="aHc" role="group" aria-labelledby="lHc">
+        <button type="button" data-v="0">Standard</button><button type="button" data-v="1">High contrast</button></div>
+      <div id="aSpeech">
+        <div class="lbl">Read aloud</div>
+        <div class="tools"><button type="button" class="btn small" id="aRead">🔊 Read this page</button>
+          <button type="button" class="btn small ghost" id="aStop">Stop</button></div>
+        <label class="chk"><input type="checkbox" id="aSpeak"> Speak each time or date as I tap it</label>
+        <div class="hint">Use VoiceOver or TalkBack? This page works with them; you can leave these off.</div>
+      </div>
+      <button type="button" class="btn small ghost" id="aDone" style="margin-top:12px">Done</button>
+    </div>
   </div>
 </header>
+<!-- Screen readers hear this box whenever something changes (saved, created, opened). -->
+<div class="sr" id="sr" aria-live="polite" role="status"></div>
 <main id="app"><div class="center">Loading…</div></main>
 <div class="bar-foot" id="foot"><div class="in"><div class="msg" id="footMsg"></div>
   <button class="btn" id="saveBtn" type="button">Save</button></div></div>
@@ -390,7 +446,7 @@ function submitCreate() {
   store.set('mkp-me', { name:f.organizer.trim(), email:f.email.trim().toLowerCase() });
   call('createPoll', [f], r => {
     setHash(r.id + '-' + r.admin);
-    showCreated(r, f.title);
+    showCreated(r, f.title); focusTitle(); announce('Your poll is ready. The guest link is below.');
   }, msg => { $('cGo').disabled = false; $('cGo').classList.remove('working'); $('cGo').textContent = 'Create poll'; err(msg); });
 }
 
@@ -428,7 +484,7 @@ function openPoll(id, admin) {
     if (!p) { $('app').innerHTML = '<div class="center">We couldn\'t find this poll. Check the link and try again.</div>'; return; }
     loadPoll(p);
     if (S.p.final || S.p.status === 'closed' || (S.saved && !S.dirty)) S.tab = 'group';
-    renderPoll();
+    renderPoll(); focusTitle(); announce('Poll opened: ' + p.title);
   }, msg => { $('app').innerHTML = '<div class="center">' + esc(msg) + '</div>'; });
 }
 
@@ -482,14 +538,14 @@ function finalCard() {
   }
   if (p.note) link += '&details=' + encodeURIComponent(p.note);
   return '<div class="card final"><div class="hint" style="color:#d6dae0">' + (isDays() ? 'Training dates chosen' : 'Meeting time chosen') + '</div>' +
-    '<div class="head" style="font-size:20px;font-weight:700;margin:4px 0 8px">' + esc(when) + '</div>' +
+    '<div class="head" style="font-size:calc(20px * var(--fs));font-weight:700;margin:4px 0 8px">' + esc(when) + '</div>' +
     '<a href="' + esc(link) + '" target="_blank" rel="noopener" class="tap">Add to Google Calendar</a>' +
     (p.isAdmin ? ' &nbsp;·&nbsp; <a href="#" class="tap" id="unfinal">Undo</a>' : '') + '</div>';
 }
 
 function dayTabs(extra) {
   return '<div class="days" id="dayTabs">' + S.p.days.map((d, i) =>
-    '<button type="button" class="day" data-i="' + i + '" aria-pressed="' + (i === S.day) + '">' +
+    '<button type="button" class="day" data-i="' + i + '" aria-pressed="' + (i === S.day) + '" aria-label="' + dayLong(d) + '">' +
     (extra ? extra(i) : '') + '<b>' + dayShort(d) + '</b><span>' + dayNum(d) + '</span></button>').join('') + '</div>';
 }
 function bindDayTabs(redraw) {
@@ -509,7 +565,7 @@ function renderMine() {
   if (isDays()) {
     body = '<div class="rows" id="rows">' + p.days.map((d, i) => {
       const on = S.mine[i] === 1;
-      return '<button type="button" class="row opt' + (on ? ' on' : '') + '" data-i="' + i + '"' + (locked ? ' disabled' : '') + '>' +
+      return '<button type="button" class="row opt' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '" aria-label="' + esc(slotSpeech(i, on)) + '"' + (locked ? ' disabled' : '') + '>' +
         '<span class="t">' + optText(d, p.length) + '</span><span class="v">' + (on ? '✓ I can make it' : 'Tap if you can') + '</span></button>';
     }).join('') + '</div>';
   } else {
@@ -517,7 +573,7 @@ function renderMine() {
     let rows = '';
     for (let i = 0; i < n; i++) {
       const on = S.mine[base + i] === 1, ms = slotMs(S.day, i);
-      rows += '<button type="button" class="row' + (on ? ' on' : '') + (new Date(ms).getUTCMinutes() === 0 ? ' hour' : '') + '" data-i="' + (base + i) + '"' + (locked ? ' disabled' : '') + '>' +
+      rows += '<button type="button" class="row' + (on ? ' on' : '') + (new Date(ms).getUTCMinutes() === 0 ? ' hour' : '') + '" data-i="' + (base + i) + '" aria-pressed="' + on + '" aria-label="' + esc(slotSpeech(base + i, on)) + '"' + (locked ? ' disabled' : '') + '>' +
         '<span class="t">' + rowLabel(S.day, i) + '</span><span class="v">' + (on ? 'Free' : '') + '</span></button>';
     }
     body = dayTabs(i => S.mine.slice(i * n, i * n + n).indexOf(1) !== -1 ? '<span class="pip"></span>' : '') +
@@ -550,12 +606,21 @@ function renderMine() {
   bindPaint($('rows'));
 }
 
+// What a time slot or date option says to screen readers and read-aloud, e.g. "Mon, Nov 23, 9:00 am, free".
+function slotSpeech(k, on) {
+  if (isDays()) return optText(S.p.days[k], S.p.length) + (on ? ', I can make it' : ', not marked');
+  const n = N(), d = Math.floor(k / n), i = k % n;
+  return fmtDayMs(slotMs(d, i)) + ', ' + fmtT(slotMs(d, i)) + (on ? ', free' : ', not marked');
+}
+
 // Tap toggles. With a mouse you can also click and drag to paint a stretch of time.
 function bindPaint(box) {
   let painting = false, val = 1, mouse = false;
   const set = btn => { const k = Number(btn.dataset.i); if (S.mine[k] === val) return;
     S.mine[k] = val; btn.classList.toggle('on', val === 1);
     btn.querySelector('.v').textContent = val ? (isDays() ? '✓ I can make it' : 'Free') : (isDays() ? 'Tap if you can' : '');
+    btn.setAttribute('aria-pressed', val === 1); btn.setAttribute('aria-label', slotSpeech(k, val === 1));
+    if (A.speak) say(slotSpeech(k, val === 1));
     S.dirty = true; updateFoot(); };
   box.addEventListener('pointerdown', e => {
     if (e.pointerType !== 'mouse' || isDays()) return;
@@ -609,7 +674,7 @@ function updateFoot() {
 function saveTimes() {
   S.saving = true; updateFoot();
   call('saveResponse', [S.id, S.me.name, S.me.email, S.mine.join(''), S.admin], p => {
-    S.saving = false; S.dirty = false; loadPoll(p); S.tab = 'group'; S.justSaved = true; renderPoll();
+    S.saving = false; S.dirty = false; loadPoll(p); S.tab = 'group'; S.justSaved = true; renderPoll(); announce('Saved. You are all set.');
     window.scrollTo(0, 0);
   }, msg => { S.saving = false; updateFoot(); $('footMsg').textContent = msg;
     const h = $('saveHint'); if (h) { h.className = 'err'; h.textContent = msg; } });
@@ -638,7 +703,8 @@ function renderGroupDays(pane) {
     const yes = counts[i], sel = S.sel === i;
     h += '<button type="button" class="row opt' + (sel ? ' sel' : '') + '" data-i="' + i + '" style="flex-wrap:wrap">' +
       '<span class="t" style="flex-basis:100%">' + optText(d, p.length) + (yes.length && yes.length === most ? ' <span class="pill">' + (yes.length === total ? 'Everyone' : 'Most') + '</span>' : '') + '</span>' +
-      '<span class="bar"><i style="width:' + (100 * yes.length / total) + '%"></i></span><span class="n">' + yes.length + '/' + total + '</span></button>';
+      '<span class="bar" aria-hidden="true"><i style="width:' + (100 * yes.length / total) + '%"></i></span><span class="n">' + yes.length + '/' + total + '</span>' +
+      '<span class="sr">, ' + yes.length + ' of ' + total + ' can make it</span></button>';
     if (sel) {
       const no = p.people.filter(x => yes.indexOf(x) === -1);
       h += '<div class="who"><div><b>Can make it:</b> ' + (yes.length ? esc(yes.map(x => x.name).join(', ')) : 'nobody yet') + '</div>' +
@@ -712,7 +778,8 @@ function renderGroupCall(pane) {
   for (let i = 0; i < n; i++) {
     const free = freeAt(S.day, i), sel = S.sel === i, ms = slotMs(S.day, i);
     h += '<button type="button" class="row' + (new Date(ms).getUTCMinutes() === 0 ? ' hour' : '') + (sel ? ' sel' : '') + '" data-i="' + i + '">' +
-      '<span class="t">' + rowLabel(S.day, i) + '</span><span class="bar"><i style="width:' + (100 * free.length / total) + '%"></i></span>' +
+      '<span class="t">' + rowLabel(S.day, i) + '</span><span class="bar" aria-hidden="true"><i style="width:' + (100 * free.length / total) + '%"></i></span>' +
+      '<span class="sr">, ' + free.length + ' of ' + total + ' free</span>' +
       '<span class="n">' + free.length + '/' + total + '</span></button>';
     if (sel) {
       const no = p.people.filter(x => free.indexOf(x) === -1);
@@ -770,6 +837,7 @@ function adminDo(action, value, btn, label) {
   const others = [...document.querySelectorAll('#app .btn:not(:disabled)')].filter(b => b !== btn);
   let before = '';
   if (btn) { before = btn.textContent; btn.classList.add('working'); btn.textContent = label || 'Working…'; if ('disabled' in btn) btn.disabled = true; }
+  announce(label || 'Working…');
   others.forEach(b => b.disabled = true);
   call('adminUpdate', [S.id, S.admin, action, value, S.me && S.me.email], p => {
     S.pickStretch = null; loadPoll(p); renderPoll(); if (action === 'final') window.scrollTo(0, 0);
@@ -786,13 +854,62 @@ function showMsg(msg) {
   box.textContent = msg; window.scrollTo(0, 0);
 }
 
+// ===================== Accessibility =====================
+// Text size (words only), contrast, read aloud, and speak-as-I-tap. Remembered in this browser.
+// High contrast also turns on by itself when the phone is set to "Increase contrast".
+const A = Object.assign({ fs:1, hc:null, speak:false }, store.get('mkp-a11y') || {});
+const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+function applyA11y() {
+  const root = document.documentElement;
+  const hc = A.hc === null ? !!(window.matchMedia && matchMedia('(prefers-contrast: more)').matches) : !!A.hc;
+  root.style.setProperty('--fs', A.fs);
+  root.classList.toggle('fs-l', A.fs > 1);
+  root.classList.toggle('hc', hc);
+  $('aFs').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', Number(b.dataset.v) === A.fs));
+  $('aHc').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.v === '1') === hc));
+  $('aSpeak').checked = !!A.speak;
+}
+function saveA11y() { store.set('mkp-a11y', A); applyA11y(); }
+// Tells screen readers about a change, without moving anything on screen.
+function announce(msg) { const r = $('sr'); r.textContent = ''; setTimeout(() => r.textContent = msg, 50); }
+// When a new screen opens, start screen readers at its title.
+function focusTitle() { const t = $('title'); t.setAttribute('tabindex', '-1'); try { t.focus({ preventScroll:true }); } catch (e) {} }
+function say(text) {
+  if (!canSpeak) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 1;
+  speechSynthesis.speak(u);
+}
+// Reads the useful parts of the page: titles, instructions and details, not every single time slot.
+function readPage() {
+  const app = $('app').cloneNode(true);
+  app.querySelectorAll('.rows, .heat, .days, .cal, select, code, .legend, .sr').forEach(x => x.remove());
+  app.querySelectorAll('h2, div, li, label, button, p').forEach(x => x.insertAdjacentText('afterend', '. '));
+  const slots = document.querySelectorAll('#rows .row').length;
+  const text = [$('title').textContent, $('sub').textContent, app.textContent.replace(/\s+/g, ' ').replace(/(\.\s*)+/g, '. ')]
+    .join('. ') + (slots ? '. There are ' + slots + ' choices below. Turn on "speak each time or date as I tap it" to hear each one.' : '');
+  say(text);
+}
+$('a11yBtn').onclick = () => {
+  const open = $('a11yPanel').hidden;
+  $('a11yPanel').hidden = !open; $('a11yBtn').setAttribute('aria-expanded', open);
+  if (open) $('a11yPanel').querySelector('h2').setAttribute('tabindex', '-1'), $('a11yPanel').querySelector('h2').focus();
+};
+$('aDone').onclick = () => { $('a11yPanel').hidden = true; $('a11yBtn').setAttribute('aria-expanded', 'false'); $('a11yBtn').focus(); };
+$('aFs').onclick = e => { const b = e.target.closest('button'); if (!b) return; A.fs = Number(b.dataset.v); saveA11y(); };
+$('aHc').onclick = e => { const b = e.target.closest('button'); if (!b) return; A.hc = b.dataset.v === '1'; saveA11y(); };
+$('aSpeak').onchange = () => { A.speak = $('aSpeak').checked; saveA11y(); if (A.speak) say('Speaking on. Tap a time or date to hear it.'); };
+if (canSpeak) { $('aRead').onclick = readPage; $('aStop').onclick = () => speechSynthesis.cancel(); }
+else $('aSpeech').hidden = true;     // this browser has no built-in voice
+applyA11y();
+
 // ===================== Start =====================
 // Link info lives after the "#": #ABCDEFGH is a guest link, #ABCDEFGH-<16 letters> is the organizer's.
 function route() {
   const h = decodeURIComponent(String(location.hash || '').replace(/^#/, '')).trim();
   const m = h.match(/^([A-Za-z]{8})(?:-([A-Za-z]{16}))?$/);
   S.dirty = false; S.tab = 'mine'; S.day = 0; S.sel = null;
-  if (m) openPoll(m[1], m[2]); else renderCreate();
+  if (m) openPoll(m[1], m[2]); else { renderCreate(); }
 }
 window.addEventListener('hashchange', route);
 route();
