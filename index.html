@@ -874,16 +874,28 @@ function saveA11y() { store.set('mkp-a11y', A); applyA11y(); }
 function announce(msg) { const r = $('sr'); r.textContent = ''; setTimeout(() => r.textContent = msg, 50); }
 // When a new screen opens, start screen readers at its title.
 function focusTitle() { const t = $('title'); t.setAttribute('tabindex', '-1'); try { t.focus({ preventScroll:true }); } catch (e) {} }
+// Speaks text in the device's own voice. Works around browser quirks:
+//  - stopping and starting speech in the same instant can come out silent in Chrome, so new speech
+//    waits a moment after stopping, but speaks right away when nothing is playing (iPhones need that);
+//  - Chrome cuts off long speech after about 15 seconds, so long text is spoken a sentence at a time.
 function say(text) {
   if (!canSpeak) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 1;
-  speechSynthesis.speak(u);
+  const parts = String(text).match(/[^.!?]+[.!?]*/g) || [String(text)];
+  const go = () => parts.forEach(p => {
+    const u = new SpeechSynthesisUtterance(p.trim()); u.lang = 'en-US'; u.rate = 1;
+    (say.keep = say.keep || []).push(u); if (say.keep.length > 40) say.keep.shift();   // keeps Chrome from dropping it
+    speechSynthesis.speak(u);
+  });
+  if (speechSynthesis.paused) speechSynthesis.resume();
+  if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); setTimeout(go, 120); }
+  else go();
 }
 // Reads the useful parts of the page: titles, instructions and details, not every single time slot.
 function readPage() {
   const app = $('app').cloneNode(true);
-  app.querySelectorAll('.rows, .heat, .days, .cal, select, code, .legend, .sr').forEach(x => x.remove());
+  // Dropdowns are read as their chosen option (e.g. the time zone), not the whole list.
+  app.querySelectorAll('select').forEach(x => { const o = x.querySelector('option[selected]') || x.options[0]; x.replaceWith(o ? o.textContent : ''); });
+  app.querySelectorAll('.rows, .heat, .days, .cal, code, .legend, .sr').forEach(x => x.remove());
   app.querySelectorAll('h2, div, li, label, button, p').forEach(x => x.insertAdjacentText('afterend', '. '));
   const slots = document.querySelectorAll('#rows .row').length;
   const text = [$('title').textContent, $('sub').textContent, app.textContent.replace(/\s+/g, ' ').replace(/(\.\s*)+/g, '. ')]
