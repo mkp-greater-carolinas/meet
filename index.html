@@ -135,11 +135,17 @@
   .err { color:#b3261e; font-size:calc(14px * var(--fs)); margin-top:8px; }
   .center { text-align:center; padding:40px 16px; color:var(--quiet); }
   .zone select { width:auto; display:inline-block; padding:6px 10px; margin-left:4px; }
+  /* "How to use this" button in the blue header: gold, so it stands out */
+  .howto-btn { display:inline-block; margin-top:10px; min-height:44px; padding:8px 16px; border:0; border-radius:12px;
+               background:var(--gold); color:var(--ink); font-weight:700; font-size:calc(15px * var(--fs)); cursor:pointer; }
+  .howto-btn:active { filter:brightness(.92); }
+  .steps { margin:4px 0 0; padding-left:22px; } .steps li { margin:4px 0; }
+  .steps-h { font-weight:700; margin:10px 0 2px; }
   /* ---------- Accessibility ---------- */
   /* Buttons keep their size; long labels wrap onto a second line instead of growing the button. */
   button { line-height:1.25; white-space:normal; }
   :focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
-  #title:focus, .a11y h2:focus { outline:none; }   /* only moved there for screen readers; not something to tap */
+  #title:focus, .a11y h2:focus { outline:none; }   /* (also covers the How-to panel) */   /* only moved there for screen readers; not something to tap */
   .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
   .band { position:relative; padding-right:68px; }
   .a11y-btn { position:absolute; top:10px; right:12px; width:48px; height:44px; border-radius:10px; border:2px solid rgba(255,255,255,.75);
@@ -177,7 +183,16 @@
     <div class="kicker">MKP Meet · Greater Carolinas</div>
     <h1 id="title">Find a time together</h1>
     <div class="sub" id="sub"></div>
+    <button type="button" class="howto-btn" id="howBtn" aria-expanded="false" aria-controls="howPanel">How to use this</button>
     <button type="button" class="a11y-btn" id="a11yBtn" aria-expanded="false" aria-controls="a11yPanel" aria-label="Text size, contrast and read aloud">Aa</button>
+  </div>
+  <!-- How to use this: short, plain steps. Guests see "answering" first; organizers see "starting" first. -->
+  <div class="a11y" id="howPanel" hidden>
+    <div class="in">
+      <h2>How to use this</h2>
+      <div id="howSteps"></div>
+      <button type="button" class="btn small" id="howDone" style="margin-top:12px">Got it</button>
+    </div>
   </div>
   <!-- Display and reading options. Choices are remembered in this browser. -->
   <div class="a11y" id="a11yPanel" hidden>
@@ -521,7 +536,9 @@ function renderPoll() {
   if (S.justSaved) h += '<div class="card note" role="status">' + (p.isAdmin
     ? '<b>✓ Sent.</b> Your answer is in. Pick the ' + (isDaysPoll() ? 'dates' : 'time') + ' below when you\'re ready.'
     : '<b>✓ Sent. You\'re done!</b> You can close this page. ' + esc(p.organizer) + ' will let you know the final ' + (isDaysPoll() ? 'dates' : 'time') +
-      '. To change your answer, open the same link again.') + '</div>';
+      '. To change your answer, open the same link again.' +
+      (S.me && S.me.email ? '<div style="margin-top:6px">📧 We emailed a confirmation to <b>' + esc(S.me.email) + '</b> (check spam if you don\'t see it).</div>' : '') +
+      '<div style="margin-top:6px">Want to set up your own poll? <a href="' + esc(APP_URL) + '" class="tap">Start one here</a></div>') + '</div>';
   if (p.final) h += finalCard();
   if (p.note) h += '<div class="card" style="white-space:pre-wrap">' + esc(p.note) + '</div>';
   if (p.status === 'closed' && !p.final) h += '<div class="card"><b>This poll is closed.</b> <span class="hint">Answers can no longer change.</span></div>';
@@ -877,6 +894,35 @@ function showMsg(msg) {
   if (!box) { $('app').insertAdjacentHTML('afterbegin', '<div class="card err" id="pageMsg" role="alert"></div>'); box = $('pageMsg'); }
   box.textContent = msg; window.scrollTo(0, 0);
 }
+
+// ===================== How to use this =====================
+// Plain steps for both jobs. Whoever is looking at a guest link sees "answering" first.
+const HOW = {
+  start: ['Give your meeting a name and pick the days and hours. For a training, tap the first day of each date option.',
+          'Tap <b>Create poll</b>. Send the <b>guest link</b> to everyone (keep your private link to yourself).',
+          'Everyone taps the times or dates that work for them, then taps <b>Send</b>.',
+          'Open your private link. See where everyone overlaps, pick the time, then tap <b>Copy</b> to send it out.'],
+  answer: ['Type your name and email (only the organizer sees your email; you\'ll get a confirmation there).',
+           'Tap every time or date that works for you. Use the date tabs to switch days.',
+           'Tap <b>Send</b> at the bottom.',
+           'That\'s it, you\'re done. The organizer picks the time and lets everyone know.']
+};
+function drawHow() {
+  const guest = /^#[A-Za-z]{8}$/.test(location.hash);
+  const list = (title, steps) => '<div class="steps-h">' + title + '</div><ol class="steps">' + steps.map(x => '<li>' + x + '</li>').join('') + '</ol>';
+  const a = list('Answering a poll (you got a link)', HOW.answer), b = list('Starting a poll', HOW.start);
+  // On poll pages, offer a way to start a fresh poll (the start page is the same address without the #code).
+  const own = location.hash ? '<a class="btn small" href="' + esc(APP_URL) + '" style="display:inline-flex;align-items:center;text-decoration:none;margin-top:6px">➕ Create your own poll</a>' : '';
+  $('howSteps').innerHTML = '<div class="hint" style="color:var(--ink)">This finds the time that works for the most people. Nothing is booked until the organizer picks it.</div>' +
+    (guest ? a + b + own : b + own + a);
+}
+$('howBtn').onclick = () => {
+  const open = $('howPanel').hidden;
+  if (open) drawHow();
+  $('howPanel').hidden = !open; $('howBtn').setAttribute('aria-expanded', open);
+  if (open) { const h = $('howPanel').querySelector('h2'); h.setAttribute('tabindex', '-1'); h.focus(); }
+};
+$('howDone').onclick = () => { $('howPanel').hidden = true; $('howBtn').setAttribute('aria-expanded', 'false'); $('howBtn').focus(); };
 
 // ===================== Accessibility =====================
 // Text size (words only), contrast, read aloud, and speak-as-I-tap. Remembered in this browser.
